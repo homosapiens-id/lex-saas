@@ -1,0 +1,73 @@
+name: ui-ai-wire
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/ui-ai-wire.yml"]
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: [self-hosted]
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Add grounded AI action to public UI
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("public/index.html")
+          s=p.read_text()
+          old='<small>Fontes oficiais · sem precedentes sintéticos</small>\n      <button id="run">Pesquisar</button>'
+          new='<small>Fontes oficiais · sem precedentes sintéticos</small>\n      <div style="display:flex;gap:8px"><button id="run">Pesquisar</button><button id="ai" style="background:#174f8a">Analisar com IA</button></div>'
+          if old not in s and 'id="ai"' not in s:
+              raise SystemExit("actions_anchor_missing")
+          if old in s:
+              s=s.replace(old,new,1)
+          anchor='health();\n</script>'
+          js=r'''q('#ai').addEventListener('click',async()=>{
+  const query=q('#query').value.trim();if(!query)return;
+  const a=q('#ai'),b=q('#run');a.disabled=true;b.disabled=true;
+  q('#status').textContent='Recuperando evidências oficiais antes da síntese…';
+  q('#results').replaceChildren();
+  try{
+    const r=await fetch('/api/ai/research',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:query,query,tribunal:'stj',limit:6})});
+    const d=await r.json();
+    q('#status').textContent=r.ok?'Síntese concluída · revisão humana obrigatória · synthetic:0':(d.detail||d.error||'Não foi possível concluir a análise.');
+    const root=q('#results');
+    const card=document.createElement('article');card.className='result';
+    const meta=document.createElement('div');meta.className='meta';meta.textContent=(d.ai_mode||'research')+' · inteligência grounded';
+    const h=document.createElement('h3');h.textContent='Síntese assistida';
+    const body=document.createElement('p');body.style.whiteSpace='pre-wrap';body.textContent=d.analysis||d.answer||d.output_text||d.summary||'Consulte as evidências retornadas pelo núcleo.';
+    card.append(meta,h,body);root.append(card);
+    const sources=d.citations||d.sources||(d.grounding&&d.grounding.sources_used)||[];
+    if(sources.length){
+      const sc=document.createElement('article');sc.className='result';
+      const sm=document.createElement('div');sm.className='meta';sm.textContent='proveniência';
+      const sh=document.createElement('h3');sh.textContent='Fontes associadas';
+      sc.append(sm,sh);
+      sources.slice(0,10).forEach((x,i)=>{const p=document.createElement('p');p.textContent=typeof x==='string'?(i+1)+'. '+x:(i+1)+'. '+(x.title||x.source_name||x.source_id||'Fonte oficial')+' — '+(x.url||x.source_url||x.id||'');sc.append(p)});
+      root.append(sc);
+    }
+  }catch{q('#status').textContent='Não foi possível concluir a análise agora.'}
+  finally{a.disabled=false;b.disabled=false}
+});'''
+          if "q('#ai').addEventListener" not in s:
+              if anchor not in s: raise SystemExit("script_anchor_missing")
+              s=s.replace(anchor,js+"\n"+anchor,1)
+          p.write_text(s)
+          PY
+          grep -q 'id="ai"' public/index.html
+          grep -q "/api/ai/research" public/index.html
+      - name: Commit UI
+        shell: bash
+        run: |
+          git config user.name "Mitra HomoSapiens Legal"
+          git config user.email "actions@homosapiens.id"
+          git add public/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(ui): add grounded AI research action"
+          git pull --rebase origin main
+          git push origin HEAD:main
