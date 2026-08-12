@@ -1,88 +1,38 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HomoSapiens Legal — Inteligência jurídica verificável</title>
-<meta name="description" content="Pesquisa jurídica verificável, fontes oficiais e revisão humana em um workspace jurídico moderno.">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HomoSapiens Legal</title>
 <style>
-:root{--bg:#f6f1e7;--ink:#10233f;--muted:#657386;--line:#d8d1c4;--card:#fffdf8;--blue:#1e5eff;--green:#0f7a55;--serif:Georgia,'Times New Roman',serif;--sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}a{color:inherit}.shell{min-height:100vh;display:grid;grid-template-columns:240px 1fr}.rail{border-right:1px solid var(--line);padding:28px 20px;display:flex;flex-direction:column;gap:28px}.brand{font:700 23px var(--serif)}.brand small{display:block;font:600 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}.nav{display:grid;gap:9px}.nav span{padding:10px 12px;border-radius:9px;color:#41516a;font-size:13px}.nav span.active{background:#e9eef8;color:var(--ink);font-weight:700}.legal{margin-top:auto;font-size:11px;line-height:1.5;color:var(--muted)}main{padding:38px clamp(24px,5vw,72px)}.top{display:flex;justify-content:space-between;gap:24px;align-items:center}.pill{display:inline-flex;gap:8px;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.45);font-size:11px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}h1{font:700 clamp(38px,6vw,78px)/.96 var(--serif);letter-spacing:-.035em;max-width:920px;margin:70px 0 24px}.lead{font-size:18px;line-height:1.6;max-width:760px;color:#425269}.search{margin-top:42px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 14px 40px rgba(16,35,63,.06)}textarea{width:100%;min-height:120px;border:0;resize:vertical;background:transparent;color:var(--ink);font:500 16px/1.5 var(--sans);outline:none}.actions{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:14px}.actions small{color:var(--muted)}button{border:0;border-radius:10px;background:var(--ink);color:white;padding:11px 16px;font-weight:700;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}.card{background:rgba(255,255,255,.52);border:1px solid var(--line);border-radius:14px;padding:18px}.card b{display:block;font-family:var(--serif);font-size:18px;margin-bottom:6px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.results{margin-top:20px;display:grid;gap:10px}.result{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}.result .meta{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:6px}.result h3{font:700 18px var(--serif);margin:0 0 6px}.result p{margin:0;color:#46566b;line-height:1.5;font-size:13px}.empty{font-size:13px;color:var(--muted);padding:8px 2px}.warning{font-size:11px;color:#745c19;margin-top:10px}
-@media(max-width:900px){.shell{grid-template-columns:1fr}.rail{display:none}.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}h1{margin-top:42px}}
-</style>
-</head>
-<body>
-<div class="shell">
-<aside class="rail">
-  <div class="brand">HomoSapiens Legal<small>preview comercial</small></div>
-  <div class="nav">
-    <span class="active">Pesquisa verificável</span>
-    <span>Casos</span>
-    <span>Jurisprudência</span>
-    <span>Legislação</span>
-    <span>Processos</span>
-    <span>Veritas</span>
-    <span>Documentos</span>
-  </div>
-  <div class="legal">Nome comercial provisório. A infraestrutura jurídica é operada pelo backend Lex 6.9. Fontes oficiais e revisão humana obrigatória.</div>
-</aside>
-<main>
-  <div class="top">
-    <div class="pill"><span class="dot"></span><span id="health">conectando ao núcleo jurídico…</span></div>
-    <div class="pill">SaaS público · beta</div>
-  </div>
-  <h1>Pesquisa jurídica com fonte, evidência e revisão.</h1>
-  <p class="lead">Uma superfície SaaS pública para explorar legislação e jurisprudência oficiais com proveniência verificável. O sistema organiza evidências; a decisão jurídica continua humana.</p>
-
-  <section class="search">
-    <textarea id="query" placeholder="Ex.: tutela de urgência, art. 300 do CPC, falha na prestação de serviço…"></textarea>
-    <div class="actions">
-      <small>Fontes oficiais · sem precedentes sintéticos</small>
-      <button id="run">Pesquisar</button>
-    </div>
-    <div id="status" class="warning"></div>
-    <div id="results" class="results"></div>
-  </section>
-
-  <section class="grid">
-    <div class="card"><b>Fontes rastreáveis</b><p>Legislação e jurisprudência vêm com origem, URL e indicação de integridade.</p></div>
-    <div class="card"><b>Falha fechada</b><p>Se uma fonte oficial estiver indisponível, o produto informa a indisponibilidade em vez de inventar.</p></div>
-    <div class="card"><b>Veritas</b><p>Referências fornecidas pelo usuário permanecem não verificadas até confirmação em fonte oficial.</p></div>
-  </section>
-</main>
+:root{--bg:#f6f1e7;--ink:#10233f;--muted:#657386;--line:#d8d1c4;--paper:#fffdf8;--blue:#174f8a;--green:#0f7a55}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}.app{max-width:1120px;margin:auto;padding:32px 24px 64px}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{font:700 25px Georgia,serif}.tag{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:7px 10px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:7px}
+h1{font:700 clamp(42px,7vw,76px)/.96 Georgia,serif;letter-spacing:-.04em;max-width:920px;margin:70px 0 20px}.lead{max-width:760px;font-size:17px;line-height:1.65;color:#425269}
+.box{margin-top:36px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 16px 44px #10233f0c}
+textarea{width:100%;min-height:120px;border:0;outline:0;resize:vertical;background:transparent;font:500 16px/1.55 inherit;color:var(--ink)}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px}.actions small{margin-right:auto;color:var(--muted)}
+button{border:1px solid var(--ink);border-radius:10px;padding:11px 15px;font-weight:750;background:transparent;color:var(--ink);cursor:pointer}button.primary{background:var(--ink);color:#fff}button:disabled{opacity:.55}
+#status{font-size:12px;color:var(--muted);margin-top:12px;min-height:18px}.results{margin-top:18px;display:grid;gap:12px}.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}.meta{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:7px}.card h3{font:700 18px Georgia,serif;margin:0 0 7px}.card p{margin:0;color:#46566b;line-height:1.55;font-size:13px;white-space:pre-wrap}.guards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.guard{border:1px solid var(--line);border-radius:13px;padding:16px;background:#ffffff70}.guard b{display:block;font:700 17px Georgia,serif;margin-bottom:6px}.guard span{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:760px){.guards{grid-template-columns:1fr}h1{margin-top:46px}.actions small{width:100%}}
+</style></head>
+<body><div class="app">
+<header><div class="brand">HomoSapiens Legal</div><div class="tag"><span class="dot"></span><span id="health">conectando...</span></div></header>
+<h1>Pesquisa jurídica com evidência antes da síntese.</h1>
+<p class="lead">Pesquise fontes oficiais ou peça uma análise assistida. O núcleo jurídico recupera evidências primeiro, exige proveniência e mantém revisão humana obrigatória.</p>
+<section class="box">
+<textarea id="q" placeholder="Ex.: art. 300 do CPC, tutela de urgência e entendimento do STJ"></textarea>
+<div class="actions"><small>Fontes oficiais · sem precedentes sintéticos</small><button id="search">Pesquisar fontes</button><button id="ai" class="primary">Analisar com IA</button></div>
+<div id="status"></div>
+</section>
+<section id="results" class="results"></section>
+<section class="guards"><div class="guard"><b>Retrieval first</b><span>A IA só analisa depois da recuperação de evidências oficiais.</span></div><div class="guard"><b>Fail closed</b><span>Sem fonte verificável, o produto informa a lacuna em vez de inventar.</span></div><div class="guard"><b>Revisão humana</b><span>Saídas assistidas não substituem conferência e decisão profissional.</span></div></section>
 </div>
 <script>
-const q=s=>document.querySelector(s);
-async function health(){
-  try{const r=await fetch('/health',{cache:'no-store'});const d=await r.json();q('#health').textContent=r.ok?`núcleo jurídico ${d.backend||''} online`:'núcleo jurídico degradado';}
-  catch{q('#health').textContent='núcleo jurídico indisponível';}
-}
-function render(d){
-  const root=q('#results');root.replaceChildren();
-  const rows=Array.isArray(d.results)?d.results:[];
-  if(!rows.length){root.innerHTML='<div class="empty">Nenhuma evidência retornada para esta consulta.</div>';return;}
-  rows.slice(0,8).forEach(x=>{
-    const el=document.createElement('article');el.className='result';
-    const title=x.title||x.processo||x.source_name||x.source||'Evidência oficial';
-    const text=x.content||x.ementa||x.excerpt||x.text||'';
-    el.innerHTML=`<div class="meta">${x.result_type||'fonte'} · ${x.source_name||x.source||'oficial'}</div><h3></h3><p></p>`;
-    el.querySelector('h3').textContent=title;
-    el.querySelector('p').textContent=String(text).slice(0,900);
-    root.append(el);
-  });
-}
-q('#run').addEventListener('click',async()=>{
-  const query=q('#query').value.trim();if(!query)return;
-  q('#run').disabled=true;q('#status').textContent='Consultando fontes oficiais…';q('#results').replaceChildren();
-  try{
-    const r=await fetch('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,tribunal:'stj',limit:8})});
-    const d=await r.json();
-    q('#status').textContent=r.ok?`Consulta concluída · dados sintéticos: ${d.integrity?.synthetic??d.synthetic??0}`:(d.detail||d.error||'Fonte indisponível.');
-    render(d);
-  }catch{q('#status').textContent='Não foi possível consultar agora.'}
-  finally{q('#run').disabled=false}
-});
-health();
-</script>
-</body>
-</html>
+const $=s=>document.querySelector(s);
+function card(meta,title,text){const a=document.createElement('article');a.className='card';const m=document.createElement('div');m.className='meta';m.textContent=meta;const h=document.createElement('h3');h.textContent=title;const p=document.createElement('p');p.textContent=String(text||'');a.append(m,h,p);return a}
+function clear(){ $('#results').replaceChildren() }
+async function health(){try{const r=await fetch('/health',{cache:'no-store'}),d=await r.json();$('#health').textContent=r.ok?'núcleo '+(d.backend||'6.9')+' online':'núcleo degradado'}catch{$('#health').textContent='núcleo indisponível'}}
+function searchView(d){clear();const rows=Array.isArray(d.results)?d.results:[];if(!rows.length){$('#results').append(card('sem evidência','Nenhuma fonte retornada',d.detail||d.error||'Consulta sem evidência oficial.'));return}rows.slice(0,8).forEach(x=>$('#results').append(card((x.result_type||'fonte')+' · '+(x.source_name||x.source||'oficial'),x.title||x.processo||'Evidência oficial',String(x.content||x.ementa||x.excerpt||x.text||'').slice(0,1200))))}
+function aiView(d){clear();$('#results').append(card((d.ai_mode||'research')+' · revisão humana obrigatória','Síntese assistida',d.analysis||d.answer||d.output_text||d.summary||'Consulte as evidências retornadas pelo núcleo.'));const src=d.citations||d.sources||(d.grounding&&d.grounding.sources_used)||[];if(src.length){const a=card('proveniência','Fontes associadas',src.length+' referência(s)');src.slice(0,10).forEach((x,i)=>{const p=document.createElement('p');p.style.marginTop='8px';p.textContent=typeof x==='string'?(i+1)+'. '+x:(i+1)+'. '+(x.title||x.source_name||x.source_id||'Fonte oficial')+' — '+(x.url||x.source_url||x.id||'');a.append(p)});$('#results').append(a)}}
+async function run(kind){const query=$('#q').value.trim();if(!query)return;const bs=[$('#search'),$('#ai')];bs.forEach(b=>b.disabled=true);$('#status').textContent=kind==='ai'?'Recuperando evidências oficiais antes da síntese...':'Consultando fontes oficiais...';clear();try{const url=kind==='ai'?'/api/ai/research':'/api/search';const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,question:query,tribunal:'stj',limit:8})});const d=await r.json();$('#status').textContent=r.ok?'Concluído · revisão humana obrigatória'+((d.integrity&&d.integrity.synthetic===0)||(d.grounding&&d.grounding.integrity&&d.grounding.integrity.synthetic===0)?' · synthetic:0':''):(d.detail||d.error||'Fonte indisponível');kind==='ai'?aiView(d):searchView(d)}catch{$('#status').textContent='Não foi possível concluir a consulta agora.'}finally{bs.forEach(b=>b.disabled=false)}}
+$('#search').onclick=()=>run('search');$('#ai').onclick=()=>run('ai');health();
+</script></body></html>
