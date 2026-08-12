@@ -17,6 +17,26 @@ app.use((_req, res, next) => {
   next();
 });
 
+async function proxyJson(res, upstreamPath, body, timeout = 60_000) {
+  try {
+    const r = await fetch(`${lexBase}${upstreamPath}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body || {}),
+      signal: AbortSignal.timeout(timeout)
+    });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    return res.status(503).json({
+      status: "source_unavailable",
+      detail: e.message,
+      human_review_required: true,
+      no_invention_policy: true
+    });
+  }
+}
+
 app.get("/health", async (_req, res) => {
   try {
     const r = await fetch(`${lexBase}/health`, { signal: AbortSignal.timeout(5000) });
@@ -31,24 +51,18 @@ app.get("/health", async (_req, res) => {
   }
 });
 
-app.post("/api/search", async (req, res) => {
+app.get("/api/ai/readiness", async (_req, res) => {
   try {
-    const r = await fetch(`${lexBase}/v1/search/global`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(req.body || {}),
-      signal: AbortSignal.timeout(45000)
-    });
+    const r = await fetch(`${lexBase}/v1/ai/readiness`, { signal: AbortSignal.timeout(8000) });
     const text = await r.text();
     res.status(r.status).type("application/json").send(text);
   } catch (e) {
-    res.status(503).json({
-      status: "source_unavailable",
-      detail: e.message,
-      human_review_required: true
-    });
+    res.status(503).json({ status: "source_unavailable", detail: e.message });
   }
 });
+
+app.post("/api/search", (req, res) => proxyJson(res, "/v1/search/global", req.body, 45_000));
+app.post("/api/analyze", (req, res) => proxyJson(res, "/v1/ai/analyze", req.body, 75_000));
 
 app.use(express.static(path.join(__dirname, "public"), { etag: true, maxAge: 300000 }));
 app.use((_req, res) => {
