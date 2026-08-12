@@ -51,7 +51,7 @@ app.post("/api/search", async (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, "public"), { etag: true, maxAge: 300000 }));
-app.get("*", (_req, res) => {
+app.use((_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
