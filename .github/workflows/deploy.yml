@@ -22,20 +22,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Check deploy channel
+        shell: bash
+        run: |
+          if [ -n "${HOSTINGER_API_TOKEN:-}" ]; then
+            echo "::notice title=SaaS deploy channel::token_present=true"
+          else
+            echo "::error title=SaaS deploy channel::token_present=false"
+            exit 1
+          fi
       - name: Validate runtime
         shell: bash
         run: |
           set -euo pipefail
-          [ -n "${HOSTINGER_API_TOKEN:-}" ]
           npm install --no-audit --no-fund
           node --check server.js
           node server.js >/tmp/legal-saas.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ok=0
           for i in {1..10}; do
-            if curl -sf http://127.0.0.1:3000/ >/tmp/legal-saas.html; then break; fi
+            if curl -sf http://127.0.0.1:3000/ >/tmp/legal-saas.html; then ok=1; break; fi
             sleep 1
           done
+          [ "$ok" -eq 1 ] || { cat /tmp/legal-saas.log; exit 1; }
           grep -q 'HomoSapiens Legal' /tmp/legal-saas.html
           kill "$pid" 2>/dev/null || true
           trap - EXIT
