@@ -18,6 +18,16 @@ jobs:
     env:
       HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
     steps:
+      - name: Reject forbidden VPS runner identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="${RUNNER_NAME:-}"
+          host="$(hostname 2>/dev/null || true)"
+          test -n "$name"
+          case "$name" in hs-vps-01|HS-VPS-01) exit 42;; esac
+          case "$host" in srv1799286) exit 43;; esac
+          echo "approved_self_hosted_runner=true"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
